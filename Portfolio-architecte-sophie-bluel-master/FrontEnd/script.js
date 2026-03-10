@@ -281,13 +281,18 @@ if (gallery && filtersContainer) {
     const previewImg = modalOverlay.querySelector('.preview-img');
     const previewBox = modalOverlay.querySelector('.upload-preview-box');
     if (fileInput && previewImg) {
+      const previewPlaceholder = modalOverlay.querySelector('.preview-placeholder');
       fileInput.addEventListener('change', (ev) => {
         const f = ev.target.files && ev.target.files[0];
         if (!f) {
+          // no file: show placeholder, hide preview
           previewImg.src = '';
           previewImg.style.display = 'none';
+          if (previewPlaceholder) previewPlaceholder.style.display = 'flex';
           return;
         }
+        // hide placeholder when a file is selected
+        if (previewPlaceholder) previewPlaceholder.style.display = 'none';
         // show a preview with object URL
         try {
           const url = URL.createObjectURL(f);
@@ -301,6 +306,7 @@ if (gallery && filtersContainer) {
           reader.onload = () => {
             previewImg.src = reader.result;
             previewImg.style.display = 'block';
+            if (previewPlaceholder) previewPlaceholder.style.display = 'none';
           };
           reader.readAsDataURL(f);
         }
@@ -361,6 +367,13 @@ if (gallery && filtersContainer) {
           figure.appendChild(figImg); figure.appendChild(figcap); gallery.appendChild(figure);
           if (messageEl) messageEl.textContent = 'Photo ajoutée.';
           uploadForm.reset();
+          // restore preview placeholder after reset
+          try {
+            const previewImg = modalOverlay.querySelector('.preview-img');
+            const previewPlaceholder = modalOverlay.querySelector('.preview-placeholder');
+            if (previewImg) { previewImg.src = ''; previewImg.style.display = 'none'; }
+            if (previewPlaceholder) previewPlaceholder.style.display = 'flex';
+          } catch (e) { /* ignore */ }
           // return to gallery view after successful upload
           try { showGalleryView(); } catch (e) { /* ignore */ }
         } else {
