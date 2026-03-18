@@ -4,7 +4,7 @@ const filtersContainer = document.querySelector(".filters");
 let works = [];
 let categoriesList = [];
 
-// Global notice element (used to show network/backend errors)
+
 let globalNotice = document.querySelector('.global-notice');
 if (!globalNotice) {
   globalNotice = document.createElement('div');
@@ -24,7 +24,7 @@ function showGlobalNotice(message, timeout = 6000) {
   }
 }
 
-// Only run gallery/category code when the related elements exist (e.g. not on login page)
+
 if (gallery && filtersContainer) {
   /* ---------- Affichage des travaux ---------- */
   function displayWorks(worksToDisplay) {
@@ -77,7 +77,7 @@ if (gallery && filtersContainer) {
     return button;
   }
 
-  /* ---------- Fetch des travaux ---------- */
+
   fetch("http://localhost:5678/api/works")
     .then(res => res.json())
     .then(data => {
@@ -155,10 +155,8 @@ if (gallery && filtersContainer) {
 
   function openModal() {
     const thumbs = modalOverlay.querySelector('.thumbnails');
-    // ensure we start in gallery view
     try { showGalleryView(); } catch (e) { /* ignore */ }
     thumbs.innerHTML = '';
-    // populate thumbnails from works
   works.forEach(w => {
       const item = document.createElement('div');
       item.className = 'thumb-item';
@@ -167,13 +165,12 @@ if (gallery && filtersContainer) {
       img.src = w.imageUrl;
       img.alt = w.title || '';
       item.appendChild(img);
-      // delete button (visible only if token)
       const token = localStorage.getItem('token');
       const del = document.createElement('button');
       del.type = 'button';
       del.className = 'thumb-delete';
       del.title = 'Supprimer';
-      // SVG trash icon for crisper rendering
+      
       del.innerHTML = `
         <svg width="12" height="12" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
           <path d="M3 6h18" stroke="white" stroke-width="2" stroke-linecap="round"/>
@@ -182,11 +179,11 @@ if (gallery && filtersContainer) {
           <path d="M14 11v6" stroke="white" stroke-width="2" stroke-linecap="round"/>
           <path d="M9 6V4a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v2" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
         </svg>`;
-  // visibility of delete buttons is handled via CSS when body has .authenticated
+  
       item.appendChild(del);
       thumbs.appendChild(item);
     });
-    // populate category select
+    
     const select = modalOverlay.querySelector('select[name="category"]');
     if (select) {
       select.innerHTML = '<option value="">Choisir...</option>';
@@ -200,7 +197,7 @@ if (gallery && filtersContainer) {
     modalOverlay.classList.add('open');
   }
 
-  // helper: show upload form in place of thumbnails (and show back button)
+  
   function showUploadFormView() {
     const thumbs = modalOverlay.querySelector('.thumbnails');
     const uploadArea = modalOverlay.querySelector('.upload-area');
@@ -210,6 +207,11 @@ if (gallery && filtersContainer) {
     if (uploadArea) uploadArea.style.display = 'block';
     if (addBtn) addBtn.style.display = 'none';
     if (backBtn) backBtn.style.display = 'inline-block';
+    
+    try {
+      const hdr = modalOverlay.querySelector('.modal-header h3');
+      if (hdr) hdr.textContent = 'Ajout photo';
+    } catch (e) { /* ignore */ }
   }
 
   function showGalleryView() {
@@ -221,17 +223,42 @@ if (gallery && filtersContainer) {
     if (uploadArea) uploadArea.style.display = 'none';
     if (addBtn) addBtn.style.display = 'inline-block';
     if (backBtn) backBtn.style.display = 'none';
+    
+    try {
+      const hdr = modalOverlay.querySelector('.modal-header h3');
+      if (hdr) hdr.textContent = 'Galerie photo';
+    } catch (e) { /* ignore */ }
+    
+    try {
+      const uploadForm = modalOverlay.querySelector('.upload-form');
+      if (uploadForm) {
+        uploadForm.reset();
+      }
+      const previewImg = modalOverlay.querySelector('.preview-img');
+      const previewPlaceholder = modalOverlay.querySelector('.preview-placeholder');
+      if (previewImg) { previewImg.src = ''; previewImg.style.display = 'none'; }
+      if (previewPlaceholder) previewPlaceholder.style.display = 'flex';
+    } catch (e) { /* ignore reset errors */ }
   }
 
   function closeModal() {
     modalOverlay.classList.remove('open');
+    
+    try {
+      const uploadForm = modalOverlay.querySelector('.upload-form');
+      if (uploadForm) uploadForm.reset();
+      const previewImg = modalOverlay.querySelector('.preview-img');
+      const previewPlaceholder = modalOverlay.querySelector('.preview-placeholder');
+      if (previewImg) { previewImg.src = ''; previewImg.style.display = 'none'; }
+      if (previewPlaceholder) previewPlaceholder.style.display = 'flex';
+    } catch (e) { /* ignore reset errors */ }
   }
 
   // events
   if (editBtn) editBtn.addEventListener('click', openModal);
   modalOverlay.addEventListener('click', (e) => {
     if (e.target === modalOverlay || e.target.classList.contains('modal-close')) closeModal();
-    // delete handler
+    
     if (e.target.classList && e.target.classList.contains('thumb-delete')) {
       const item = e.target.closest('.thumb-item');
       const id = item && item.dataset.id;
@@ -311,7 +338,7 @@ if (gallery && filtersContainer) {
           reader.readAsDataURL(f);
         }
       });
-      // wire visible browse button inside preview box to open file chooser
+      
       const browseBtn = modalOverlay.querySelector('.browse-btn');
       if (browseBtn) {
         browseBtn.addEventListener('click', (ev) => {
@@ -338,7 +365,7 @@ if (gallery && filtersContainer) {
         if (res.status === 201) {
           const newWork = await res.json();
           works.push(newWork);
-          // update thumbnails and gallery
+          
           const thumbs = modalOverlay.querySelector('.thumbnails');
           const item = document.createElement('div');
           item.className = 'thumb-item';
