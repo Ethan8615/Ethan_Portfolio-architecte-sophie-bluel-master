@@ -126,8 +126,8 @@ if (gallery && filtersContainer) {
       <div class="upload-area" style="display:none;">
         <form class="upload-form" style="margin-top:12px;" enctype="multipart/form-data">
           <div class="upload-preview" style="margin-bottom:18px;">
-            <div class="upload-preview-box" style="width:320px; height:120px; margin:0 auto; background:#eef7fb; display:flex; flex-direction:column; align-items:center; justify-content:center; border-radius:6px; padding:12px; box-sizing:border-box;">
-              <img class="preview-img" src="" alt="Aperçu sélectionné" style="max-width:100%; max-height:64px; display:none; object-fit:cover; border-radius:4px; margin-bottom:8px;" />
+            <div class="upload-preview-box" style="width:320px; height:120px; margin:0 auto; background:#eef7fb; display:flex; flex-direction:column; align-items:center; justify-content:center; border-radius:6px;">
+              <img class="preview-img" src="" alt="Aperçu sélectionné" style="max-width:100%; display:none; object-fit:cover; border-radius:4px;" />
               <div class="preview-placeholder" style="display:flex; flex-direction:column; align-items:center; gap:8px; color:#7b8a90;">
                 <svg width="40" height="32" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><path d="M21 19V7a2 2 0 0 0-2-2H5a2 2 0 0 0-2 2v12" stroke="#9aa8ad" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/><path d="M3 15l4-4 4 4 5-6 5 6" stroke="#9aa8ad" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
                 <button type="button" class="browse-btn" aria-label="Ajouter une photo">+ Ajouter photo</button>
